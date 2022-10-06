@@ -2,12 +2,14 @@
 #![no_main]
 
 use embedded_hal::digital::v2::ToggleableOutputPin;
+use fugit::RateExtU32;
 use rp_pico;
 use rp_pico::entry;
 
 use rp_pico::hal::gpio::bank0::Gpio4;
 use rp_pico::hal::gpio::bank0::Gpio5;
 use rp_pico::hal::gpio::FunctionI2C;
+use rp_pico::hal::Clock;
 
 use rp_pico::hal::multicore::{Multicore, Stack};
 
@@ -114,14 +116,15 @@ fn main() -> ! {
     // Setup CORE1 peripherals
     let sda_pin = pins.gpio4.into_mode::<rp_pico::hal::gpio::FunctionI2C>();
     let scl_pin = pins.gpio5.into_mode::<rp_pico::hal::gpio::FunctionI2C>();
+    let freq = 10_000_u32.Hz();
 
     let i2c = rp_pico::hal::I2C::i2c0(
         peripherals.I2C0,
         sda_pin,
         scl_pin,
-        embedded_time::rate::Hertz::new(10_000_u32),
+        freq,
         &mut peripherals.RESETS,
-        clocks.system_clock,
+        clocks.system_clock.freq(),
     );
 
     // Keyboard driver
@@ -136,8 +139,8 @@ fn main() -> ! {
 
     let spi = spi.init(
         &mut peripherals.RESETS,
-        embedded_time::rate::Hertz::new(3_000_000_u32),
-        embedded_time::rate::Hertz::new(96_000_u32),
+        3_000_000_u32.Hz(),
+        96_000_u32.Hz(),
         &embedded_hal::spi::MODE_0,
     );
 
