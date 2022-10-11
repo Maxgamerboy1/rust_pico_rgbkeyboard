@@ -2,6 +2,7 @@ use defmt::Format;
 
 #[repr(u8)]
 #[derive(Format)]
+#[allow(dead_code)]
 pub enum KeyCode {
     Empty = 0x0,
     A = 0x04,
@@ -74,15 +75,16 @@ pub enum KeyCode {
     Left = 0x50,
     Down = 0x51,
     Up = 0x52,
+}
 
-    // Modifier keys
-    Fn = 0xF0,
-    LeftShift = 0xF1,
-    LeftCtrl = 0xF2,
-    LeftAlt = 0xF3,
-    LeftCmd = 0xF4,
-    RightCmd = 0xF5,
-    RightAlt = 0xF6,
-    RightCtrl = 0xF7,
-    RightShift = 0xF8,
+#[allow(dead_code)]
+pub enum ModifierKeyCodes {
+    LeftCtrl = 0x01,
+    LeftShift = 0x02,
+    LeftAlt = 0x04,
+    LeftGui = 0x08,
+    RightCtrl = 0x10,
+    RightShift = 0x20,
+    RightAlt = 0x40,
+    RightGui = 0x80,
 }
